@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/Ionicons";
 
 const NavBar = () => {
   const navigation = useNavigation();
@@ -8,7 +9,8 @@ const NavBar = () => {
 
   return (
     <View style={styles.navbar}>
-      <TouchableOpacity onPress={() => navigation.navigate("HomeScreen")}>
+      <TouchableOpacity onPress={() => navigation.navigate("HomeScreen")} style={styles.navItemContainer}>
+        <Icon name="home" size={20} color={route.name === "HomeScreen" ? "#000" : "#000"} />
         <Text
           style={[
             styles.navItem,
@@ -18,7 +20,8 @@ const NavBar = () => {
           Home
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("ActivityScreen")}>
+      <TouchableOpacity onPress={() => navigation.navigate("ActivityScreen")} style={styles.navItemContainer}>
+        <Icon name="notifications" size={20} color={route.name === "ActivityScreen" ? "#000" : "#000"} />
         <Text
           style={[
             styles.navItem,
@@ -28,7 +31,8 @@ const NavBar = () => {
           Activity
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("MoreScreen")}>
+      <TouchableOpacity onPress={() => navigation.navigate("MoreScreen")} style={styles.navItemContainer}>
+        <Icon name="menu" size={20} color={route.name === "MoreScreen" ? "#000" : "#000"} />
         <Text
           style={[
             styles.navItem,
@@ -50,7 +54,10 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     position: "absolute",
     bottom: 0,
-    width: 400,
+    width: "100%",
+  },
+  navItemContainer: {
+    alignItems: "center",
   },
   navItem: {
     fontSize: 18,
