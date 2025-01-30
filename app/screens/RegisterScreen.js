@@ -12,20 +12,28 @@ import { theme } from "../core/theme";
 import { emailValidator } from "../helpers/emailValidator";
 import { passwordValidator } from "../helpers/passwordValidator";
 import { nameValidator } from "../helpers/nameValidator";
+import { phoneNumberValidator } from "../helpers/phoneNumberValidator";
+import { homeAddressValidator } from "../helpers/homeAddressValidator";
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState({ value: "", error: "" });
   const [email, setEmail] = useState({ value: "", error: "" });
   const [password, setPassword] = useState({ value: "", error: "" });
+  const [phoneNumber, setPhoneNumber] = useState({ value: "", error: "" });
+  const [homeAddress, setHomeAddress] = useState({ value: "", error: "" });
 
   const onSignUpPressed = () => {
     const nameError = nameValidator(name.value);
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
+    const phoneNumberError = phoneNumberValidator(phoneNumber.value);
+    const homeAddressError = homeAddressValidator(homeAddress.value);
     if (emailError || passwordError || nameError) {
       setName({ ...name, error: nameError });
       setEmail({ ...email, error: emailError });
       setPassword({ ...password, error: passwordError });
+      setPhoneNumber({ ...phoneNumber, error: phoneNumberError });
+      setHomeAddress({ ...homeAddress, error: homeAddressError})
       return;
     }
     navigation.reset({
@@ -37,8 +45,7 @@ export default function RegisterScreen({ navigation }) {
   return (
     <Background>
       <BackButton goBack={navigation.goBack} />
-      <Logo />
-      <Header>Welcome.</Header>
+      <Header>Create an account</Header>
       <TextInput
         label="Name"
         returnKeyType="next"
@@ -68,6 +75,23 @@ export default function RegisterScreen({ navigation }) {
         errorText={password.error}
         secureTextEntry
       />
+      <TextInput
+      label="Phone Number"
+      returnKeyType="next"
+      value={phoneNumber.value}
+      onChangeText={(text) => setPhoneNumber({ value: text, error: "" })}
+      error={!!phoneNumber.error}
+      errorText={phoneNumber.error}
+      keyboardType="phone-pad"
+      />
+      <TextInput
+      label="Home Address"
+      returnKeyType="done"
+      value={homeAddress.value}
+      onChangeText={(text) => setHomeAddress({ value: text, error: "" })}
+      error={!!homeAddress.error}
+      errorText={homeAddress.error}
+      />
       <Button
         mode="contained"
         onPress={onSignUpPressed}
@@ -76,7 +100,7 @@ export default function RegisterScreen({ navigation }) {
         Next
       </Button>
       <View style={styles.row}>
-        <Text>I already have an account !</Text>
+        <Text>Already have an account?</Text>
       </View>
       <View style={styles.row}>
         <TouchableOpacity onPress={() => navigation.replace("LoginScreen")}>
