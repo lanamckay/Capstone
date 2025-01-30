@@ -5,14 +5,14 @@ import * as Location from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function LocationPermissionScreen({ navigation }) {
-  const requestLocationPermission = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status === "granted") {
-      navigation.goBack(); // Go back to HomeScreen after permission is granted
-    } else {
-      alert("Location permission is required to add a device.");
-    }
-  };
+    const requestLocationPermission = async () => {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status === "granted") {
+          navigation.navigate("NotificationsPermissionScreen");
+        } else {
+          alert("Location permission is required to add a device.");
+        }
+      };
 
   return (
     <SafeAreaView style={styles.safeContainer}>
@@ -26,8 +26,6 @@ export default function LocationPermissionScreen({ navigation }) {
           Select <Text style={{ fontWeight: "bold" }}>"Allow While Using App"</Text> on the next screen
           in order to track your loved one and create zones.
         </Text>
-
-        {/* <Image source={require("../assets/location-illustration.png")} style={styles.image} /> */}
 
         <TouchableOpacity style={styles.allowButton} onPress={requestLocationPermission}>
           <Text style={styles.allowButtonText}>Allow Location</Text>
@@ -54,23 +52,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
-    marginTop: 20,
+    marginTop: 40,
   },
   description: {
     textAlign: "center",
-    marginVertical: 10,
-  },
-  image: {
-    width: 250,
-    height: 150,
-    resizeMode: "contain",
-    marginVertical: 20,
+    marginVertical: 30,
   },
   allowButton: {
     backgroundColor: "#6BBE6C",
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 25,
+    top: 40,
   },
   allowButtonText: {
     color: "white",

@@ -18,12 +18,10 @@ export default function HomeScreen({ navigation }) {
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("LocationPermissionScreen")}>
             <Ionicons name="add" size={16} color="white" />
             <Text style={styles.buttonText}>Add New Device</Text>
-            </TouchableOpacity>
-
+          </TouchableOpacity>
         </View>
-
-        <NavBar />
       </View>
+      <NavBar style={styles.navBar} />
     </SafeAreaView>
   );
 }
@@ -31,23 +29,25 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#FAF9F6",
   },
   container: {
     flex: 1,
-    backgroundColor: "white",
     padding: 20,
+    backgroundColor: "#FAF9F6",
   },
   header: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
-    color: "green",
+    color: "black",
     marginTop: 20,
   },
   card: {
     backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginVertical: 10,
   },
-  addButton: {
+  button: {
     flexDirection: "row",
     backgroundColor: "#2C3E50",
     paddingVertical: 12,
@@ -71,10 +71,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 10,
   },
-  addButtonText: {
+  buttonText: {
     color: "white",
     fontSize: 16,
     marginLeft: 8,
   },
+  navBar: {
+    backgroundColor: "#E0E9D5",
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    paddingBottom: 10,
+  },
 });
-
