@@ -7,3 +7,5 @@ export { default as ActivityScreen } from "./ActivityScreen";
 export { default as MoreScreen } from "./MoreScreen";
 export { default as LocationPermissionScreen } from "./LocationPermissionScreen";
 export {default as NotificationsPermissionScreen } from "./NotificationsPermissionScreen";
+export { default as SetupScreen } from "./SetupScreen";
+

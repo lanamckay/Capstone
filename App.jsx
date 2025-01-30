@@ -14,6 +14,7 @@ import {
   MoreScreen,
   LocationPermissionScreen,
   NotificationsPermissionScreen,
+  SetupScreen,
 } from "./app/screens";
 
 const Stack = createStackNavigator();
@@ -36,6 +37,7 @@ export default function App() {
           <Stack.Screen name="MoreScreen" component={MoreScreen} />
           <Stack.Screen name="LocationPermissionScreen" component={LocationPermissionScreen} />
           <Stack.Screen name="NotificationsPermissionScreen" component={NotificationsPermissionScreen} />
+          <Stack.Screen name="SetupScreen" component={SetupScreen} />
 
           <Stack.Screen
             name="ResetPasswordScreen"

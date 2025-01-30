@@ -8,9 +8,9 @@ export default function NotificationsPermissionScreen({ navigation }) {
   const requestNotificationsPermission = async () => {
     const { status } = await Notifications.requestPermissionsAsync();
     if (status === "granted") {
-      navigation.goBack();
-    } else {
-      alert("Notification permission is required to receive alerts.");
+        navigation.navigate("SetupScreen");
+      } else {
+        alert("Notification permission is required to receive alerts.");
     }
   };
 
