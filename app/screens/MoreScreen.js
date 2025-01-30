@@ -7,7 +7,7 @@ import NavBar from "../components/NavBar";
 export default function MoreScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.safeContainer}>
-      <View style={styles.container}>
+      <View style={styles.content}>
         <Text style={styles.header}>Account Setting</Text>
 
         <View style={styles.menu}>
@@ -26,7 +26,9 @@ export default function MoreScreen({ navigation }) {
           <Ionicons name="trash" size={20} color="black" />
           <Text style={styles.deleteText}>Delete Account</Text>
         </TouchableOpacity>
+      </View>
 
+      <View style={styles.navContainer}>
         <NavBar />
       </View>
     </SafeAreaView>
@@ -45,7 +47,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
-  container: {
+  content: {
     flex: 1,
     backgroundColor: "white",
     padding: 20,
@@ -84,4 +86,10 @@ const styles = StyleSheet.create({
     color: "black",
     marginLeft: 5,
   },
+  navContainer: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+  },
 });
+
