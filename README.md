@@ -1,4 +1,4 @@
-## Usage ℹ️
+## Usage
 
 - Install dependencies
 
