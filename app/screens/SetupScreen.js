@@ -5,15 +5,16 @@ import * as ImagePicker from "expo-image-picker";
 
 export default function SetupScreen({ navigation }) {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [careZoneId, setCareZoneId] = useState("");
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-  
+
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
     }
@@ -23,21 +24,20 @@ export default function SetupScreen({ navigation }) {
     <View style={styles.container}>
       <View style={styles.stepContainer}>
         <View style={styles.stepIndicator} />
-        <Text style={styles.stepText}>Connect To Device</Text>
-        <TouchableOpacity style={styles.button}>
-          <Ionicons name="bluetooth" size={16} color="white" />
-          <Text style={styles.buttonText}>Connect</Text>
-        </TouchableOpacity>
+        <Text style={styles.stepText}>Enter CareZone ID</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter CareZone ID"
+          placeholderTextColor="#A9A9A9"
+          onChangeText={(text) => setCareZoneId(text)}
+          value={careZoneId}
+        />
       </View>
 
       <View style={styles.stepContainer}>
         <View style={styles.stepIndicator} />
         <Text style={styles.stepText}>Name Your CareZone</Text>
-        <TextInput 
-          style={styles.input} 
-          placeholder="e.g. Bob or Janis" 
-          placeholderTextColor="#A9A9A9"
-        />
+        <TextInput style={styles.input} placeholder="e.g. Bob or Janis" placeholderTextColor="#A9A9A9" />
       </View>
 
       <View style={styles.stepContainer}>
@@ -50,7 +50,10 @@ export default function SetupScreen({ navigation }) {
         {selectedImage && <Image source={{ uri: selectedImage }} style={styles.image} />}
       </View>
 
-      <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate("HomeScreen")}>
+      <TouchableOpacity
+        style={styles.nextButton}
+        onPress={() => navigation.navigate("HomeScreen", { careZoneId })}
+      >
         <Text style={styles.nextButtonText}>Next</Text>
         <Ionicons name="arrow-forward" size={20} color="white" />
       </TouchableOpacity>
