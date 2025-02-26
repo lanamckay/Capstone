@@ -15,6 +15,9 @@ import {
   LocationPermissionScreen,
   NotificationsPermissionScreen,
   SetupScreen,
+  CreateZone,
+  UserZones,
+  Zone,
 } from "./app/screens";
 
 const Stack = createStackNavigator();
@@ -35,9 +38,18 @@ export default function App() {
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="ActivityScreen" component={ActivityScreen} />
           <Stack.Screen name="MoreScreen" component={MoreScreen} />
-          <Stack.Screen name="LocationPermissionScreen" component={LocationPermissionScreen} />
-          <Stack.Screen name="NotificationsPermissionScreen" component={NotificationsPermissionScreen} />
+          <Stack.Screen
+            name="LocationPermissionScreen"
+            component={LocationPermissionScreen}
+          />
+          <Stack.Screen
+            name="NotificationsPermissionScreen"
+            component={NotificationsPermissionScreen}
+          />
           <Stack.Screen name="SetupScreen" component={SetupScreen} />
+          <Stack.Screen name="CreateZone" component={CreateZone} />
+          <Stack.Screen name="UserZones" component={UserZones} />
+          <Stack.Screen name="Zone" component={Zone} />
 
           <Stack.Screen
             name="ResetPasswordScreen"

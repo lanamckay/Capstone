@@ -4,11 +4,12 @@ import MapView, { Marker } from "react-native-maps";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import NavBar from "../components/NavBar";
+import Button from "../components/Button";
 
 export default function HomeScreen({ navigation, route }) {
   const [devices, setDevices] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
-
+  const [zones, setZones] = useState([]);
   useEffect(() => {
     if (route.params?.careZoneId) {
       setDevices([{ id: route.params.careZoneId, name: "Lana" }]);
@@ -18,16 +19,47 @@ export default function HomeScreen({ navigation, route }) {
     }
   }, [route.params?.careZoneId, route.params?.selectedImage]);
 
+  useEffect(() => {
+    const fetchZones = async () => {
+      try {
+        const response = await fetch(
+          "https://t0acfkle3f.execute-api.us-east-2.amazonaws.com/dev?user_id=1"
+        );
+        const data = await response.json();
+        setZones([data]);
+      } catch (error) {
+        console.error("Failed to fetch zones:", error);
+      }
+    };
+
+    fetchZones();
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeContainer}>
       <View style={styles.container}>
         <Text style={styles.header}>Devices ( {devices.length} )</Text>
-
         {devices.length > 0 ? (
           devices.map((device) => (
-            <View key={device.id} style={styles.card}>
+            <TouchableOpacity
+              key={device.id}
+              style={styles.card}
+              onPress={() => navigation.navigate("UserZones")}
+            >
               <Text style={styles.cardTitle}>{device.name}</Text>
-              <Text style={styles.cardText}>⚬ No Zones</Text>
+              <Text style={styles.cardText}>
+                {" "}
+                {zones[0].length > 0 ? `${zones[0].length} Zones` : "No Zones"}
+              </Text>
+              {zones[0].length === 0 && (
+                <Button
+                  style={{ backgroundColor: "#2E466E", paddingVertical: 0 }}
+                  mode="contained"
+                  onPress={() => navigation.navigate("UserZones")}
+                >
+                  + Create Zone
+                </Button>
+              )}
 
               <MapView
                 style={styles.map}
@@ -42,16 +74,22 @@ export default function HomeScreen({ navigation, route }) {
                   coordinate={{ latitude: 43.4723, longitude: -80.5256 }}
                   title="Lana"
                 >
-                  {selectedImage && <Image source={{ uri: selectedImage }} style={styles.markerImage} />}
+                  {selectedImage && (
+                    <Image
+                      source={{ uri: selectedImage }}
+                      style={styles.markerImage}
+                    />
+                  )}
                 </Marker>
               </MapView>
-            </View>
+            </TouchableOpacity>
           ))
         ) : (
           <View style={styles.card}>
             <Text style={styles.cardTitle}>No Devices</Text>
             <Text style={styles.cardText}>
-              You currently have no devices set up. Click Add New Device Below to get started!
+              You currently have no devices set up. Click Add New Device Below
+              to get started!
             </Text>
             <TouchableOpacity
               style={styles.button}

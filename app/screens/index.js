@@ -6,6 +6,8 @@ export { default as HomeScreen } from "./HomeScreen";
 export { default as ActivityScreen } from "./ActivityScreen";
 export { default as MoreScreen } from "./MoreScreen";
 export { default as LocationPermissionScreen } from "./LocationPermissionScreen";
-export {default as NotificationsPermissionScreen } from "./NotificationsPermissionScreen";
+export { default as NotificationsPermissionScreen } from "./NotificationsPermissionScreen";
 export { default as SetupScreen } from "./SetupScreen";
-
+export { default as CreateZone } from "./CreateZone";
+export { default as UserZones } from "./UserZones";
+export { default as Zone } from "./Zone";
