@@ -54,7 +54,7 @@ export default function CreateZone({ navigation, route }) {
 
     try {
       const response = await fetch(
-        "https://tg9ugz35md.execute-api.us-east-2.amazonaws.com/geofence/add",
+        "https://tg9ugz35md.execute-api.us-east-2.amazonaws.com/add-geofence2",
         {
           method: "POST",
           headers: {
