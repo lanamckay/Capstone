@@ -22,7 +22,7 @@ export default function CreateZone({ navigation, route }) {
   const [selectedDays, setSelectedDays] = useState([]);
   const [timeStart, setTimeStart] = useState(new Date());
   const [timeEnd, setTimeEnd] = useState(new Date());
-  const [allDay, setAllDay] = useState(true);
+  const [allDay, setAllDay] = useState(false);
   const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const handleAddZone = async () => {
     const formattedStartTime = allDay
