@@ -20,10 +20,20 @@ export default function CreateZone({ navigation, route }) {
   const [zoneName, setZoneName] = useState("5 km Neighbourhood");
   const [radius, setRadius] = useState(5000); // 5 km in meters
   const [selectedDays, setSelectedDays] = useState([]);
-  const [timeStart, setTimeStart] = useState(new Date());
-  const [timeEnd, setTimeEnd] = useState(new Date());
-  const [allDay, setAllDay] = useState(true);
+  const [allDay, setAllDay] = useState(false);
   const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const [timeStart, setTimeStart] = useState(() => {
+    const initialTime = new Date();
+    initialTime.setHours(8, 0, 0, 0);
+    return initialTime;
+  });
+  
+  const [timeEnd, setTimeEnd] = useState(() => {
+    const initialTime = new Date();
+    initialTime.setHours(19, 0, 0, 0);
+    return initialTime;
+  });
+  
   const handleAddZone = async () => {
     const formattedStartTime = allDay
       ? "00:01:00"
@@ -102,7 +112,6 @@ export default function CreateZone({ navigation, route }) {
           >
             Create Zone
           </Text>
-          {/* Zone Name Input */}
           <Text style={styles.label}>Name your zone</Text>
           <Text style={styles.subText}>e.g. 5 km Neighbourhood</Text>
           <TextInput
@@ -111,7 +120,6 @@ export default function CreateZone({ navigation, route }) {
             onChangeText={setZoneName}
           />
 
-          {/* Map Section */}
           <Text style={styles.label}>Name Type</Text>
           <View style={styles.mapContainer}>
             <MapView
@@ -182,7 +190,7 @@ export default function CreateZone({ navigation, route }) {
                   value={timeStart}
                   mode="time"
                   is24Hour={true}
-                  display="spinner"
+                  display="compact"
                   onChange={(event, selectedTime) => {
                     if (selectedTime) {
                       setTimeStart(selectedTime);
@@ -197,7 +205,7 @@ export default function CreateZone({ navigation, route }) {
                   value={timeEnd}
                   mode="time"
                   is24Hour={true}
-                  display="spinner"
+                  display="compact"
                   onChange={(event, selectedTime) => {
                     if (selectedTime) {
                       setTimeEnd(selectedTime);
@@ -207,9 +215,7 @@ export default function CreateZone({ navigation, route }) {
               </View>
             </View>
           )}
-          {/* Time Selection */}
 
-          {/* Buttons */}
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.cancelButton}
