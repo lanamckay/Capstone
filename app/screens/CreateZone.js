@@ -17,8 +17,8 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function CreateZone({ navigation, route }) {
   const { refreshZones } = route.params;
-  const [zoneName, setZoneName] = useState("5 km Neighbourhood");
-  const [radius, setRadius] = useState(5000); // 5 km in meters
+  const [zoneName, setZoneName] = useState("1 km Neighbourhood");
+  const [radius, setRadius] = useState(1000);
   const [selectedDays, setSelectedDays] = useState([]);
   const [allDay, setAllDay] = useState(false);
   const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -113,7 +113,7 @@ export default function CreateZone({ navigation, route }) {
             Create Zone
           </Text>
           <Text style={styles.label}>Name your zone</Text>
-          <Text style={styles.subText}>e.g. 5 km Neighbourhood</Text>
+          <Text style={styles.subText}>e.g. 1 km Neighbourhood</Text>
           <TextInput
             style={styles.input}
             value={zoneName}
