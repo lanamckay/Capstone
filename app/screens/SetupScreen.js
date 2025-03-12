@@ -1,30 +1,26 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
 
 export default function SetupScreen({ navigation }) {
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [showHelpCareZoneId, setShowHelpCareZoneId] = useState(false);
+  const [showHelpNameCareZone, setShowHelpNameCareZone] = useState(false);
   const [careZoneId, setCareZoneId] = useState("");
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
-    }
-  };
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Setup Your CareZone</Text>
+      <Text style={styles.subtitle}>Follow the steps below to complete your setup.</Text>
+      
       <View style={styles.stepContainer}>
-        <View style={styles.stepIndicator} />
-        <Text style={styles.stepText}>Enter CareZone ID</Text>
+        <View style={styles.stepRow}>
+          <View style={styles.stepIndicatorActive} />
+          <Text style={styles.stepText}>Enter CareZone ID</Text>
+          <TouchableOpacity onPress={() => setShowHelpCareZoneId(!showHelpCareZoneId)}>
+            <Ionicons name="help-circle-outline" size={18} color="#6BBE6C" style={styles.helpIcon} />
+          </TouchableOpacity>
+        </View>
+        {showHelpCareZoneId && <Text style={styles.helpText}>CareZone ID is found on the back of your device</Text>}
         <TextInput
           style={styles.input}
           placeholder="Enter CareZone ID"
@@ -35,21 +31,22 @@ export default function SetupScreen({ navigation }) {
       </View>
 
       <View style={styles.stepContainer}>
-        <View style={styles.stepIndicator} />
-        <Text style={styles.stepText}>Name Your CareZone</Text>
-        <TextInput style={styles.input} placeholder="e.g. Bob or Janis" placeholderTextColor="#A9A9A9" />
+        <View style={styles.stepRow}>
+          <View style={styles.stepIndicatorActive} />
+          <Text style={styles.stepText}>Name Your CareZone</Text>
+          <TouchableOpacity onPress={() => setShowHelpNameCareZone(!showHelpNameCareZone)}>
+            <Ionicons name="help-circle-outline" size={18} color="#6BBE6C" style={styles.helpIcon} />
+          </TouchableOpacity>
+        </View>
+        {showHelpNameCareZone && <Text style={styles.helpText}>Name your CareZone after your loved one</Text>}
+        <TextInput
+          style={styles.input}
+          placeholder="e.g. Lana"
+          placeholderTextColor="#A9A9A9"
+        />
       </View>
 
-      <View style={styles.stepContainer}>
-        <View style={styles.stepIndicator} />
-        <Text style={styles.stepText}>Upload Picture</Text>
-        <TouchableOpacity style={styles.button} onPress={pickImage}>
-          <Ionicons name="cloud-upload-outline" size={16} color="white" />
-          <Text style={styles.buttonText}>Upload</Text>
-        </TouchableOpacity>
-        {selectedImage && <Image source={{ uri: selectedImage }} style={styles.image} />}
-      </View>
-
+      {/* Next Button */}
       <TouchableOpacity
         style={styles.nextButton}
         onPress={() => navigation.navigate("HomeScreen", { careZoneId })}
@@ -68,34 +65,44 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center",
   },
-  stepContainer: {
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 10,
+    marginVertical: 10,
+  },
+  subtitle: {
+    fontSize: 14,
+    textAlign: "center",
+    color: "gray",
     marginBottom: 30,
   },
-  stepIndicator: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+  stepContainer: {
+    marginBottom: 20,
+  },
+  stepRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  stepIndicatorActive: {
+    width: 15,
+    height: 15,
+    borderRadius: 7.5,
     backgroundColor: "#6BBE6C",
-    marginBottom: 5,
   },
   stepText: {
     fontSize: 16,
     fontWeight: "500",
-    marginBottom: 10,
   },
-  button: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#1E2A5B",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    alignSelf: "flex-start",
+  helpIcon: {
+    marginLeft: 5,
   },
-  buttonText: {
-    color: "white",
-    fontSize: 14,
-    marginLeft: 8,
+  helpText: {
+    fontSize: 12,
+    color: "#6BBE6C",
+    marginTop: 5,
   },
   input: {
     borderBottomWidth: 1,
@@ -103,12 +110,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     fontSize: 14,
     color: "black",
-  },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-    marginTop: 10,
+    marginTop: 5,
   },
   nextButton: {
     backgroundColor: "#6BBE6C",
