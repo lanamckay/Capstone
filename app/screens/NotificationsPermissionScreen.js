@@ -8,28 +8,30 @@ export default function NotificationsPermissionScreen({ navigation }) {
   const requestNotificationsPermission = async () => {
     const { status } = await Notifications.requestPermissionsAsync();
     if (status === "granted") {
-        navigation.navigate("SetupScreen");
-      } else {
-        alert("Notification permission is required to receive alerts.");
+      navigation.navigate("SetupScreen");
+    } else {
+      alert("Notification permission is required to receive alerts.");
     }
   };
 
   return (
     <SafeAreaView style={styles.safeContainer}>
-      <View style={styles.container}>
+      <View style={styles.overlayContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.closeButton}>
           <Ionicons name="close" size={24} color="black" />
         </TouchableOpacity>
 
         <Text style={styles.header}>Allow Notifications Permission</Text>
         <Text style={styles.description}>
-          Allow notifications so we can let you know if your loved one leaves.
+        Select <Text style={{ fontWeight: "bold" }}>"Allow Notifications" </Text>on your device so we can let you know if your loved one leaves.
         </Text>
-        <Text style={styles.subDescription}>
-          <Text style={{ fontWeight: "bold" }}>
-            We will not send you marketing messages with this permission.
-          </Text>
-        </Text>
+
+        <View style={styles.imageContainer}>
+          <Image source={require("../../assets/women.jpg")} style={styles.mapImage} />
+          <View style={styles.locationIcon}>
+            <Ionicons name="notifications" size={30} color="white" />
+          </View>
+        </View>
 
         <TouchableOpacity style={styles.allowButton} onPress={requestNotificationsPermission}>
           <Text style={styles.allowButtonText}>Allow Notifications</Text>
@@ -44,12 +46,20 @@ export default function NotificationsPermissionScreen({ navigation }) {
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: "white",
-  },
-  container: {
-    flex: 1,
-    padding: 20,
+    backgroundColor: "#EAEAEA",
+    justifyContent: "center",
     alignItems: "center",
+  },
+  overlayContainer: {
+    backgroundColor: "white",
+    width: "85%",
+    padding: 20,
+    borderRadius: 30,
+    alignItems: "center",
+    elevation: 5,
+    minHeight: 650,
+    maxHeight: 650,
+    justifyContent: "space-between",
   },
   closeButton: {
     alignSelf: "flex-end",
@@ -58,40 +68,30 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
-    marginTop: 40,
+    marginTop: 10,
+    marginBottom: 5,
   },
   description: {
     textAlign: "center",
-    marginVertical: 10,
-  },
-  subDescription: {
-    textAlign: "center",
-    marginBottom: 30,
+    marginBottom: 20,
   },
   imageContainer: {
+    marginVertical: 40,
     position: "relative",
-    alignItems: "center",
-    marginVertical: 20,
   },
-  image: {
-    width: 250,
+  mapImage: {
+    width: 200,
     height: 150,
-    resizeMode: "contain",
-  },
-  iconOverlay: {
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-    backgroundColor: "#6BBE6C",
-    borderRadius: 20,
-    padding: 5,
+    borderRadius: 10,
   },
   allowButton: {
     backgroundColor: "#6BBE6C",
     paddingVertical: 12,
-    paddingHorizontal: 30,
+    paddingHorizontal: 40,
     borderRadius: 25,
-    top: 40,
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 20,
   },
   allowButtonText: {
     color: "white",
@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
   },
   footerText: {
     textAlign: "center",
-    marginTop: 50,
     fontSize: 12,
     color: "gray",
   },
