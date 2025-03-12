@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   zoneRadius: {
-    fontSize: 10,
+    fontSize: 9,
     color: "black",
   },
   activeTime: {
@@ -227,12 +227,14 @@ const styles = StyleSheet.create({
     color: "white",
   },
   activeLabel: {
-    fontSize: 10,
+    fontSize: 12,
     color: "white",
+    textAlign: "center",
   },
   timeLabel: {
-    fontSize: 4,
+    fontSize: 10,
     color: "white",
+    textAlign: "center",
   },
   map: {
     width: "100%",
