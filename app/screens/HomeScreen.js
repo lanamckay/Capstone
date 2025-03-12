@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,6 +10,7 @@ export default function HomeScreen({ navigation, route }) {
   const [devices, setDevices] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [zones, setZones] = useState([]);
+
   useEffect(() => {
     if (route.params?.careZoneId) {
       setDevices([{ id: route.params.careZoneId, name: "Lana" }]);
@@ -17,23 +18,26 @@ export default function HomeScreen({ navigation, route }) {
     if (route.params?.selectedImage) {
       setSelectedImage(route.params.selectedImage);
     }
-  }, [route.params?.careZoneId, route.params?.selectedImage]);
+  
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchZones();
+    });
+  
+    return unsubscribe;
+  }, [navigation, route.params?.careZoneId, route.params?.selectedImage]);
+  
 
-  useEffect(() => {
-    const fetchZones = async () => {
-      try {
-        const response = await fetch(
-          "https://t0acfkle3f.execute-api.us-east-2.amazonaws.com/dev?user_id=1"
-        );
-        const data = await response.json();
-        setZones([data]);
-      } catch (error) {
-        console.error("Failed to fetch zones:", error);
-      }
-    };
-
-    fetchZones();
-  }, []);
+  const fetchZones = async () => {
+    try {
+      const response = await fetch(
+        "https://t0acfkle3f.execute-api.us-east-2.amazonaws.com/dev?user_id=1"
+      );
+      const data = await response.json();
+      setZones(data);
+    } catch (error) {
+      console.error("Failed to fetch zones:", error);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeContainer}>
@@ -48,10 +52,10 @@ export default function HomeScreen({ navigation, route }) {
             >
               <Text style={styles.cardTitle}>{device.name}</Text>
               <Text style={styles.cardText}>
-                {" "}
-                {zones[0].length > 0 ? `${zones[0].length} Zones` : "No Zones"}
+                {zones.length > 0 ? `${zones.length} Zones` : "No Zones"}
               </Text>
-              {zones[0].length === 0 && (
+
+              {zones.length === 0 && (
                 <Button
                   style={{ backgroundColor: "#2E466E", paddingVertical: 0 }}
                   mode="contained"
@@ -88,8 +92,7 @@ export default function HomeScreen({ navigation, route }) {
           <View style={styles.card}>
             <Text style={styles.cardTitle}>No Devices</Text>
             <Text style={styles.cardText}>
-              You currently have no devices set up. Click Add New Device Below
-              to get started!
+              You currently have no devices set up. Click Add New Device Below to get started!
             </Text>
             <TouchableOpacity
               style={styles.button}

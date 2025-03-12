@@ -14,6 +14,7 @@ import BackButton from "../components/BackButton";
 import Header from "../components/Header";
 import { theme } from "../core/theme";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Alert } from "react-native";
 
 export default function CreateZone({ navigation, route }) {
   const { refreshZones } = route.params;
@@ -77,7 +78,7 @@ export default function CreateZone({ navigation, route }) {
       const result = await response.json();
 
       if (response.status === 201) {
-        alert("Zone Added Successfully!");
+        Alert.alert("Success", "Zone added successfully!");
         refreshZones();
         navigation.goBack();
       } else {
@@ -152,7 +153,6 @@ export default function CreateZone({ navigation, route }) {
             </View>
           </View>
 
-          {/* Schedule Selection */}
           <Text style={styles.label}>Schedule</Text>
           <View style={styles.daysContainer}>
             {days.map((day) => (
