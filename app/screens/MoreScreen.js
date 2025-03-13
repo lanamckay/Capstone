@@ -21,11 +21,6 @@ export default function MoreScreen({ navigation }) {
             routes: [{ name: "StartScreen" }],
           })} />
         </View>
-
-        <TouchableOpacity style={styles.deleteButton}>
-          <Ionicons name="trash" size={20} color="black" />
-          <Text style={styles.deleteText}>Delete Account</Text>
-        </TouchableOpacity>
       </View>
 
       <View style={styles.navContainer}>
@@ -56,18 +51,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "green",
-    marginTop: 20,
+    marginBottom: 10,
   },
   menu: {
-    flex: 1,
-    justifyContent: "center",
+    marginTop: 15,
     borderTopWidth: 0,
     borderColor: "#ddd",
   },
   menuItem: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 15,
+    paddingVertical: 18,
     borderBottomWidth: 1,
     borderColor: "#ddd",
   },
@@ -78,7 +72,7 @@ const styles = StyleSheet.create({
   deleteButton: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 10,
     alignSelf: "center",
   },
   deleteText: {
