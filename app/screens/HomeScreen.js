@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   },
   buttonText: { color: "white", fontSize: 14, marginLeft: 8 },
   mapContainer: { position: "relative" },
-  map: { width: "100%", height: 450, borderRadius: 10, marginTop: 10 },
+  map: { width: "100%", height: 420, borderRadius: 10, marginTop: 10 },
   markerImage: { width: 40, height: 40, borderRadius: 20, borderWidth: 2, borderColor: "white" },
   zoomControls: { position: "absolute", top: 10, right: 10, flexDirection: "column" },
   zoomButton: {
