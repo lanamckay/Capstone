@@ -41,7 +41,7 @@ export default function SetupScreen({ navigation }) {
         {showHelpNameCareZone && <Text style={styles.helpText}>Name your CareZone after your loved one</Text>}
         <TextInput
           style={styles.input}
-          placeholder="e.g. Lana"
+          placeholder="e.g. Bob"
           placeholderTextColor="#A9A9A9"
         />
       </View>

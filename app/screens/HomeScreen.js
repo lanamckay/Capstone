@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,22 +10,27 @@ export default function HomeScreen({ navigation, route }) {
   const [devices, setDevices] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [zones, setZones] = useState([]);
+  const [region, setRegion] = useState({
+    latitude: 43.4730,
+    longitude: -80.5395,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+  });
 
   useEffect(() => {
     if (route.params?.careZoneId) {
-      setDevices([{ id: route.params.careZoneId, name: "Lana" }]);
+      setDevices([{ id: route.params.careZoneId, name: "Bob" }]);
     }
     if (route.params?.selectedImage) {
       setSelectedImage(route.params.selectedImage);
     }
-  
+
     const unsubscribe = navigation.addListener("focus", () => {
       fetchZones();
     });
-  
+
     return unsubscribe;
   }, [navigation, route.params?.careZoneId, route.params?.selectedImage]);
-  
 
   const fetchZones = async () => {
     try {
@@ -37,6 +42,22 @@ export default function HomeScreen({ navigation, route }) {
     } catch (error) {
       console.error("Failed to fetch zones:", error);
     }
+  };
+
+  const zoomIn = () => {
+    setRegion((prevRegion) => ({
+      ...prevRegion,
+      latitudeDelta: Math.max(prevRegion.latitudeDelta / 2, 0.002),
+      longitudeDelta: Math.max(prevRegion.longitudeDelta / 2, 0.002),
+    }));
+  };
+
+  const zoomOut = () => {
+    setRegion((prevRegion) => ({
+      ...prevRegion,
+      latitudeDelta: prevRegion.latitudeDelta * 2,
+      longitudeDelta: prevRegion.longitudeDelta * 2,
+    }));
   };
 
   return (
@@ -54,7 +75,6 @@ export default function HomeScreen({ navigation, route }) {
               <Text style={styles.cardText}>
                 {zones.length > 0 ? `${zones.length} Zones` : "No Zones"}
               </Text>
-
               {zones.length === 0 && (
                 <Button
                   style={{ backgroundColor: "#2E466E", paddingVertical: 0 }}
@@ -64,28 +84,23 @@ export default function HomeScreen({ navigation, route }) {
                   + Create Zone
                 </Button>
               )}
-
-              <MapView
-                style={styles.map}
-                initialRegion={{
-                  latitude: 43.4723,
-                  longitude: -80.5256,
-                  latitudeDelta: 0.01,
-                  longitudeDelta: 0.01,
-                }}
-              >
-                <Marker
-                  coordinate={{ latitude: 43.4723, longitude: -80.5256 }}
-                  title="Lana"
-                >
-                  {selectedImage && (
-                    <Image
-                      source={{ uri: selectedImage }}
-                      style={styles.markerImage}
-                    />
-                  )}
-                </Marker>
-              </MapView>
+              <View style={styles.mapContainer}>
+                <MapView style={styles.map} region={region}>
+                  <Marker coordinate={{ latitude: 43.4730, longitude: -80.5395 }} title="Bob">
+                    {selectedImage && (
+                      <Image source={{ uri: selectedImage }} style={styles.markerImage} />
+                    )}
+                  </Marker>
+                </MapView>
+                <View style={styles.zoomControls}>
+                  <TouchableOpacity style={styles.zoomButton} onPress={zoomIn}>
+                    <Ionicons name="add" size={24} color="white" />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.zoomButton} onPress={zoomOut}>
+                    <Ionicons name="remove" size={24} color="white" />
+                  </TouchableOpacity>
+                </View>
+              </View>
             </TouchableOpacity>
           ))
         ) : (
@@ -110,21 +125,9 @@ export default function HomeScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  safeContainer: {
-    flex: 1,
-    backgroundColor: "#FAF9F6",
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#FAF9F6",
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "black",
-    marginTop: 20,
-  },
+  safeContainer: { flex: 1, backgroundColor: "#FAF9F6" },
+  container: { flex: 1, padding: 20, backgroundColor: "#FAF9F6" },
+  header: { fontSize: 24, fontWeight: "bold", color: "black", marginTop: 20 },
   card: {
     backgroundColor: "white",
     padding: 20,
@@ -136,14 +139,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     marginTop: 30,
   },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  cardText: {
-    textAlign: "left",
-    marginVertical: 5,
-  },
+  cardTitle: { fontSize: 18, fontWeight: "bold" },
+  cardText: { textAlign: "left", marginVertical: 5 },
   button: {
     flexDirection: "row",
     alignItems: "center",
@@ -154,22 +151,17 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginTop: 10,
   },
-  buttonText: {
-    color: "white",
-    fontSize: 14,
-    marginLeft: 8,
-  },
-  map: {
-    width: "100%",
-    height: 200,
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  markerImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: "white",
+  buttonText: { color: "white", fontSize: 14, marginLeft: 8 },
+  mapContainer: { position: "relative" },
+  map: { width: "100%", height: 450, borderRadius: 10, marginTop: 10 },
+  markerImage: { width: 40, height: 40, borderRadius: 20, borderWidth: 2, borderColor: "white" },
+  zoomControls: { position: "absolute", top: 10, right: 10, flexDirection: "column" },
+  zoomButton: {
+    backgroundColor: "#2E466E",
+    padding: 3,
+    borderRadius: 5,
+    marginVertical: 5,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
