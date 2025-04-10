@@ -7,17 +7,28 @@ export default function ActivityScreen({ navigation }) {
   const [breachEvents, setBreachEvents] = useState([]);
 
   useEffect(() => {
-    fetch("https://nufoyigs2l.execute-api.us-east-2.amazonaws.com/breach-events")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Fetched data:", data);
-        if (data.breach_events && Array.isArray(data.breach_events)) {
-          setBreachEvents(data.breach_events);
-        } else {
-          console.error("Unexpected API response format:", data);
-        }
-      })
-      .catch((error) => console.error("Error fetching breach events:", error));
+    const fetchEvents = () => {
+      fetch("https://nufoyigs2l.execute-api.us-east-2.amazonaws.com/breach-events")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Fetched data:", data);
+          if (data.breach_events && Array.isArray(data.breach_events)) {
+            setBreachEvents(data.breach_events);
+          } else {
+            console.error("Unexpected API response format:", data);
+          }
+        })
+        .catch((error) => console.error("Error fetching breach events:", error));
+    };
+
+    // Initial fetch
+    fetchEvents();
+
+    // Fetch every 3 seconds
+    const intervalId = setInterval(fetchEvents, 3000);
+
+    // Clean up on unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   const renderItem = ({ item }) => {
@@ -47,7 +58,7 @@ export default function ActivityScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.safeContainer}>
       <View style={styles.content}>
-      <View style={styles.liveLocationContainer}>
+        <View style={styles.liveLocationContainer}>
           <TouchableOpacity onPress={() => navigation.navigate("HomeScreen")}>
             <Text style={styles.liveLocationText}>Live Location</Text>
           </TouchableOpacity>
