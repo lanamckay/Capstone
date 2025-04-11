@@ -3,6 +3,33 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native
 import { SafeAreaView } from "react-native-safe-area-context";
 import NavBar from "../components/NavBar";
 
+// Utility function to convert UTC to EST
+const convertUTCtoEST = (utcTimestamp) => {
+  // Parse the timestamp as UTC
+  const date = new Date(utcTimestamp + 'Z'); // Adding 'Z' to indicate UTC time
+  
+  // Format options for EST
+  const options = {
+    timeZone: 'America/New_York',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  };
+  
+  // Get the time in EST
+  const timeString = date.toLocaleTimeString('en-US', options);
+  
+  // Get the date in EST
+  const dateString = date.toLocaleDateString('en-US', {
+    timeZone: 'America/New_York',
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric'
+  });
+  
+  return `${dateString} ${timeString}`;
+};
+
 export default function ActivityScreen({ navigation }) {
   const [breachEvents, setBreachEvents] = useState([]);
 
@@ -33,23 +60,29 @@ export default function ActivityScreen({ navigation }) {
 
   const renderItem = ({ item }) => {
     const eventType = item.event_type ? item.event_type.trim().toUpperCase() : "UNKNOWN";
-    console.log("Received event type:", eventType);
+    const estTime = convertUTCtoEST(item.timestamp);
 
     let eventMessage;
     if (eventType === "GEOFENCE_BREACHED") {
       eventMessage = (
         <>
-          • <Text style={styles.redText}>Bob</Text> left <Text style={styles.redText}>Geofence</Text> at {item.timestamp}
+          • <Text style={styles.redText}>Bob</Text> left <Text style={styles.redText}>Geofence</Text> at {estTime}
+        </>
+      );
+    } else if (eventType === "GEOFENCE_REENTERED") {
+      eventMessage = (
+        <>
+          • <Text style={styles.greenText}>Bob</Text> re-entered <Text style={styles.greenText}>Geofence</Text> at {estTime}
         </>
       );
     } else if (eventType === "FALL_DETECTED") {
       eventMessage = (
         <>
-          • <Text style={styles.redText}>Bob</Text> had a <Text style={styles.redText}>Fall Detected</Text> at {item.timestamp}
+          • <Text style={styles.redText}>Bob</Text> had a <Text style={styles.redText}>Fall Detected</Text> at {estTime}
         </>
       );
     } else {
-      eventMessage = <>• <Text style={styles.redText}>Unknown Event</Text> at {item.timestamp}</>;
+      eventMessage = <>• <Text style={styles.redText}>Unknown Event</Text> at {estTime}</>;
     }
 
     return <View style={styles.alertContainer}><Text style={styles.alertText}>{eventMessage}</Text></View>;
@@ -98,6 +131,7 @@ const styles = StyleSheet.create({
   alertContainer: { padding: 10, borderBottomWidth: 1, borderBottomColor: "#ccc", marginTop: 10 },
   alertText: { color: "#721c24" },
   redText: { color: "red", fontWeight: "bold" },
+  greenText: { color: "green", fontWeight: "bold" },
   navContainer: { position: "absolute", bottom: 0, width: "100%" },
   noEventsText: { textAlign: "center", fontSize: 16, color: "gray", marginTop: 20 },
   flatList: { flex: 1 },

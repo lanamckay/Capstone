@@ -29,8 +29,12 @@ export default function UserZones({ navigation }) {
   };
 
   useEffect(() => {
-    fetchZones();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchZones();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const fetchZones = async () => {
     try {
@@ -148,7 +152,7 @@ export default function UserZones({ navigation }) {
         <Button
           style={styles.createButton}
           mode="contained"
-          onPress={() => navigation.navigate("CreateZone", { refreshZones: fetchZones })}
+          onPress={() => navigation.navigate("CreateZone")}
         >
           + Create Zone
         </Button>

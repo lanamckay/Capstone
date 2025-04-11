@@ -14,6 +14,13 @@ import NavBar from "../components/NavBar";
 export default function Zone({ route, navigation }) {
   const { zoneId } = route.params;
   const [zone, setZone] = useState(null);
+  const [region, setRegion] = useState({
+    latitude: 43.4730,
+    longitude: -80.5395,
+    latitudeDelta: 0.02,
+    longitudeDelta: 0.02,
+  });
+
   const formatTime = (timeString) => {
     const [hour, minute] = timeString.split(":");
     const date = new Date();
@@ -36,6 +43,16 @@ export default function Zone({ route, navigation }) {
         const data = await response.json();
         const selectedZone = data.find((z) => z.id === zoneId);
         setZone(selectedZone);
+        
+        // Update region when zone data is loaded
+        if (selectedZone) {
+          setRegion({
+            latitude: selectedZone.origin_latitude,
+            longitude: selectedZone.origin_longitude,
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.02,
+          });
+        }
       } catch (error) {
         console.error("Failed to fetch zone details:", error);
       }
@@ -43,6 +60,22 @@ export default function Zone({ route, navigation }) {
 
     fetchZoneDetails();
   }, [zoneId]);
+
+  const zoomIn = () => {
+    setRegion((prevRegion) => ({
+      ...prevRegion,
+      latitudeDelta: Math.max(prevRegion.latitudeDelta / 2, 0.002),
+      longitudeDelta: Math.max(prevRegion.longitudeDelta / 2, 0.002),
+    }));
+  };
+
+  const zoomOut = () => {
+    setRegion((prevRegion) => ({
+      ...prevRegion,
+      latitudeDelta: prevRegion.latitudeDelta * 2,
+      longitudeDelta: prevRegion.longitudeDelta * 2,
+    }));
+  };
 
   if (!zone) {
     return (
@@ -103,31 +136,37 @@ export default function Zone({ route, navigation }) {
           </View>
 
           {/* Map */}
-          <MapView
-            style={styles.map}
-            initialRegion={{
-              latitude: zone.origin_latitude,
-              longitude: zone.origin_longitude,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
-            }}
-          >
-            <Marker
-              coordinate={{
-                latitude: zone.origin_latitude,
-                longitude: zone.origin_longitude,
-              }}
-            />
-            <Circle
-              center={{
-                latitude: zone.origin_latitude,
-                longitude: zone.origin_longitude,
-              }}
-              radius={zone.radius * 1000} // Convert from km to meters
-              strokeColor="red"
-              fillColor="rgba(255,0,0,0.2)"
-            />
-          </MapView>
+          <View style={styles.container}>
+            <MapView
+              style={styles.map}
+              region={region}
+              onRegionChangeComplete={setRegion}
+            >
+              <Marker
+                coordinate={{
+                  latitude: zone.origin_latitude,
+                  longitude: zone.origin_longitude,
+                }}
+              />
+              <Circle
+                center={{
+                  latitude: zone.origin_latitude,
+                  longitude: zone.origin_longitude,
+                }}
+                radius={zone.radius * 1000} // Convert from km to meters
+                strokeColor="red"
+                fillColor="rgba(255,0,0,0.2)"
+              />
+            </MapView>
+            <View style={styles.zoomControls}>
+              <TouchableOpacity style={styles.zoomButton} onPress={zoomIn}>
+                <Ionicons name="add" size={24} color="white" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.zoomButton} onPress={zoomOut}>
+                <Ionicons name="remove" size={24} color="white" />
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </ScrollView>
 
@@ -241,5 +280,23 @@ const styles = StyleSheet.create({
     height: 300,
     borderRadius: 10,
     marginTop: 20,
+  },
+  container: {
+    flex: 1,
+    position: 'relative',
+  },
+  zoomControls: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    flexDirection: 'column',
+  },
+  zoomButton: {
+    backgroundColor: '#2E466E',
+    padding: 8,
+    borderRadius: 5,
+    marginVertical: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
