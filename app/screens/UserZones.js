@@ -15,7 +15,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 export default function UserZones({ navigation }) {
   const [zones, setZones] = useState([]);
-  const [addResponse, setAddResponse] = useState(null);
 
   const formatTime = (timeString) => {
     const [hour, minute] = timeString.split(":");
@@ -30,25 +29,12 @@ export default function UserZones({ navigation }) {
   };
 
   useEffect(() => {
-    fetchZones();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchZones();
+    });
 
-  useEffect(() => {
-    const pollEndpoint = async () => {
-      try {
-        const response = await fetch(
-          "https://k0vnw074r8.execute-api.us-east-2.amazonaws.com/default/getLatestLocation"
-        );
-        const data = await response.json();
-        setAddResponse(data);
-      } catch (error) {
-        console.error("Polling failed:", error);
-      }
-    };
-
-    const interval = setInterval(pollEndpoint, 10000);
-    return () => clearInterval(interval);
-  }, []);
+    return unsubscribe;
+  }, [navigation]);
 
   const fetchZones = async () => {
     try {
@@ -64,7 +50,7 @@ export default function UserZones({ navigation }) {
 
   const deleteZone = async (zoneId) => {
     console.log("Deleting zone with ID:", zoneId);
-
+  
     try {
       const response = await fetch(
         `https://h3qzfajh98.execute-api.us-east-2.amazonaws.com/default/deleteZone?geofence_id=${zoneId}`,
@@ -75,10 +61,10 @@ export default function UserZones({ navigation }) {
           },
         }
       );
-
+  
       const result = await response.json();
       console.log("Response:", result);
-
+  
       if (response.ok) {
         Alert.alert("Success", "Zone deleted successfully!");
         fetchZones();
@@ -89,17 +75,17 @@ export default function UserZones({ navigation }) {
       console.error("Error deleting zone:", error);
       Alert.alert("Error", "An error occurred while deleting the zone.");
     }
-  };
+  };  
 
   const confirmDelete = (zoneId) => {
-    Alert.alert("Delete Zone", "Are you sure you want to delete this zone?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        onPress: () => deleteZone(zoneId),
-        style: "destructive",
-      },
-    ]);
+    Alert.alert(
+      "Delete Zone",
+      "Are you sure you want to delete this zone?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Delete", onPress: () => deleteZone(zoneId), style: "destructive" },
+      ]
+    );
   };
 
   return (
@@ -119,49 +105,34 @@ export default function UserZones({ navigation }) {
                 onPress={() => navigation.navigate("Zone", { zoneId: zone.id })}
               >
                 <Text style={styles.cardTitle}>{zone.name}</Text>
+                <Text style={styles.cardText}>Days: {zone.days.join(", ")}</Text>
                 <Text style={styles.cardText}>
-                  Days: {zone.days.join(", ")}
-                </Text>
-                <Text style={styles.cardText}>
-                  Active From: {formatTime(zone.start_time)} -{" "}
-                  {formatTime(zone.end_time)}
+                  Active From: {formatTime(zone.start_time)} - {formatTime(zone.end_time)}
                 </Text>
 
                 <MapView
                   style={styles.map}
                   initialRegion={{
-                    latitude: addResponse?.latitude
-                      ? addResponse.latitude
-                      : zone.origin_latitude,
-                    longitude: addResponse?.longitude
-                      ? addResponse.longitude
-                      : zone.origin_longitude,
+                    latitude: zone.origin_latitude,
+                    longitude: zone.origin_longitude,
                     latitudeDelta: 0.01,
                     longitudeDelta: 0.01,
                   }}
-                  onStartShouldSetResponder={() => true}
+                  onStartShouldSetResponder={() => true} 
                 >
                   <Marker
                     coordinate={{
-                      latitude: addResponse?.latitude
-                        ? addResponse.latitude
-                        : zone.origin_latitude,
-                      longitude: addResponse?.longitude
-                        ? addResponse.longitude
-                        : zone.origin_longitude,
+                      latitude: zone.origin_latitude,
+                      longitude: zone.origin_longitude,
                     }}
                     title={`Zone ${zone.id}`}
                   />
                   <Circle
                     center={{
-                      latitude: addResponse?.latitude
-                        ? addResponse.latitude
-                        : zone.origin_latitude,
-                      longitude: addResponse?.longitude
-                        ? addResponse.longitude
-                        : zone.origin_longitude,
+                      latitude: zone.origin_latitude,
+                      longitude: zone.origin_longitude,
                     }}
-                    radius={zone.radius * 400}
+                    radius={zone.radius * 400} 
                     strokeColor="red"
                     fillColor="rgba(255,0,0,0.2)"
                   />
@@ -181,9 +152,7 @@ export default function UserZones({ navigation }) {
         <Button
           style={styles.createButton}
           mode="contained"
-          onPress={() =>
-            navigation.navigate("CreateZone", { refreshZones: fetchZones })
-          }
+          onPress={() => navigation.navigate("CreateZone")}
         >
           + Create Zone
         </Button>

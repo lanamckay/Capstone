@@ -1,15 +1,38 @@
 {
   "expo": {
-    "name": "Exlogrn",
-    "slug": "Exlogrn",
-    "version": "2.0.0",
+    "name": "CareZone",
+    "slug": "CareZone",
+    "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "ios": {
-      "supportsTablet": true
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
-    "plugins": [
-      "expo-barcode-scanner"
-    ]
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.carezone.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.carezone.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "newArchEnabled": true,
+      "eas": {
+        "projectId": "your-project-id"
+      }
+    }
   }
 }
